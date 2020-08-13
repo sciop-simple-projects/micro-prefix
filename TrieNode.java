@@ -7,15 +7,15 @@ import java.util.List;
 import java.util.Map;
 
 public class TrieNode {
-	protected Map<Character, TrieNode> map;
-	protected boolean EOW;
+	private Map<Character, TrieNode> map;
+	private boolean EOW;
 	
 	public TrieNode() {
 		map = new HashMap<Character, TrieNode>();
 		EOW = false;
 	}
 	
-	protected void add(String s, int index) {
+	private void add(String s, int index) {
 		if(index == s.length()) EOW = true;
 		else {
 			if(!map.containsKey(s.charAt(index))) map.put(s.charAt(index), new TrieNode());
@@ -27,7 +27,7 @@ public class TrieNode {
 		add(s, 0);
 	}
 	
-	protected boolean query(String s, int index) {
+	private boolean query(String s, int index) {
 		if(index == s.length()) return EOW;
 		if(!map.containsKey(s.charAt(index))) return false;
 		return map.get(s.charAt(index)).query(s, index + 1);
@@ -37,11 +37,7 @@ public class TrieNode {
 		return query(s, 0);
 	}
 	
-	public List<String> prefixQuery(String pre) {
-		return prefixQuery(pre, 0);
-	}
-	
-	protected List<String> prefixQuery(String pre, int index) {
+	private List<String> prefixQuery(String pre, int index) {
 		List<String> ans = new ArrayList<String>();
 		if(index < pre.length()) {
 			if(!map.containsKey(pre.charAt(index))) return ans;
@@ -53,5 +49,9 @@ public class TrieNode {
 		if(EOW) ans.add(pre);
 		Collections.sort(ans);
 		return ans;
+	}
+	
+	public List<String> prefixQuery(String pre) {
+		return prefixQuery(pre, 0);
 	}
 }
