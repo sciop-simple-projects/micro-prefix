@@ -1,3 +1,5 @@
+package quick;
+
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Random;
