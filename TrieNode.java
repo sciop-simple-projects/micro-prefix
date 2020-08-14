@@ -47,11 +47,12 @@ public class TrieNode {
 			ans.addAll(map.get(c).prefixQuery(pre + c, index + 1));
 		}
 		if(EOW) ans.add(pre);
-		Collections.sort(ans);
 		return ans;
 	}
 	
 	public List<String> prefixQuery(String pre) {
-		return prefixQuery(pre, 0);
+		List<String> ans = prefixQuery(pre, 0);
+		Collections.sort(ans);
+		return ans;
 	}
 }
