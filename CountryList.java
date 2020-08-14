@@ -82,12 +82,12 @@ public class CountryList {
 				typedQuery += c[chosenByUser].charAt(i);
 				now = LocalTime.now().getNano();
 				ans = root.prefixQuery(typedQuery);
-				now = (LocalTime.now().getNano() - now)/1000000;
+				now = (LocalTime.now().getNano() - now)/1000;
 				spaces = "";
 				if(typedQuery.length() < 10) {
 					while(typedQuery.length() + spaces.length() < 10) spaces += " ";
 				} else spaces = " ";
-				System.out.println("q: " + typedQuery + spaces + now + " milliseconds: " + ans);
+				System.out.println("q: " + typedQuery + spaces + now + " microseconds: " + ans);
 				if(ans.size() == 1) {
 					System.out.println();
 					System.out.println("Found a unique match with " + (i+1) + " characters.");
