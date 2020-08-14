@@ -64,14 +64,15 @@ public class CountryList {
 		}
 		
 		//number of tests:
-		int tests = 500;
+		int tests = 50;
 		
 		// vars
 		Random random = new Random();
 		int chosenByUser, now;
 		List<String> ans;
 		String typedQuery, spaces;
-		int start = LocalTime.now().getNano();
+		int noPrintSumOfTimes = 0;
+		long start = LocalTime.now().getNano()/1000;
 		System.out.println("Total country names: " + c.length);
 		
 		//main loop
@@ -80,9 +81,11 @@ public class CountryList {
 			typedQuery = "";
 			for(int i = 0; i < c[chosenByUser].length(); i++) {
 				typedQuery += c[chosenByUser].charAt(i);
-				now = LocalTime.now().getNano();
+				now = LocalTime.now().getNano()/1000;
 				ans = root.prefixQuery(typedQuery);
-				now = (LocalTime.now().getNano() - now)/1000;
+				now = LocalTime.now().getNano()/1000 - now;
+				if(now < 0) now += 1000000;
+				noPrintSumOfTimes += now;
 				spaces = "";
 				if(typedQuery.length() < 10) {
 					while(typedQuery.length() + spaces.length() < 10) spaces += " ";
@@ -96,6 +99,25 @@ public class CountryList {
 				}
 			}
 		}
-		System.out.println("Total time: " + (LocalTime.now().getNano() - start)/1000000 + " ms");
+		start = LocalTime.now().getNano()/1000 - start;
+		if(start < 0) start += 1000000;
+		System.out.println("Total time: " + start/1000 + " ms for " + tests + " tests.");
+		System.out.println("Total (excluding printing time): " + noPrintSumOfTimes/1000 + "ms");
+		
+		System.out.println();
+		System.out.println();
+		System.out.println("Testing expression query: ");
+		System.out.println("   * -> any number of any character");
+		System.out.println("   . -> one of any character");
+		System.out.println();
+		
+		String q = "*land";
+		System.out.println("Query: \"" + q + "\"");
+		System.out.println();
+		now = LocalTime.now().getNano()/1000;
+		System.out.println(root.expQuery(q));
+		now = LocalTime.now().getNano()/1000 - now;
+		if(now < 0) now += 1000000;
+		System.out.println("This single calculation took " + now/1000 + " ms. This is probably very bad.");
 	}
 }
