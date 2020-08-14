@@ -3,19 +3,21 @@ package quick;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class TrieNode {
-	private Map<Character, TrieNode> map;
-	private boolean EOW;
+	protected Map<Character, TrieNode> map;
+	protected boolean EOW;
 	
 	public TrieNode() {
 		map = new HashMap<Character, TrieNode>();
 		EOW = false;
 	}
 	
-	private void add(String s, int index) {
+	protected void add(String s, int index) {
 		if(index == s.length()) EOW = true;
 		else {
 			if(!map.containsKey(s.charAt(index))) map.put(s.charAt(index), new TrieNode());
@@ -27,7 +29,7 @@ public class TrieNode {
 		add(s, 0);
 	}
 	
-	private boolean query(String s, int index) {
+	protected boolean query(String s, int index) {
 		if(index == s.length()) return EOW;
 		if(!map.containsKey(s.charAt(index))) return false;
 		return map.get(s.charAt(index)).query(s, index + 1);
@@ -37,7 +39,14 @@ public class TrieNode {
 		return query(s, 0);
 	}
 	
-	private List<String> prefixQuery(String pre, int index) {
+	// Returns a (sorted) list of all strings below the node that start with pre
+	public List<String> prefixQuery(String pre) {
+		List<String> ans = prefixQuery(pre, 0);
+		Collections.sort(ans);
+		return ans;
+	}
+	
+	protected List<String> prefixQuery(String pre, int index) {
 		List<String> ans = new ArrayList<String>();
 		if(index < pre.length()) {
 			if(!map.containsKey(pre.charAt(index))) return ans;
@@ -50,9 +59,56 @@ public class TrieNode {
 		return ans;
 	}
 	
-	public List<String> prefixQuery(String pre) {
-		List<String> ans = prefixQuery(pre, 0);
+	// Returns a (sorted) list of all strings below the node that match exp:
+	//	'.' -> any character
+	//  '*' -> any character any times (incl. 0)
+	
+	// Probably very bad optimization since we have to prune duplicates at the end...
+	public List<String> expQuery(String exp) {
+		List<String> ans = expQuery(exp, 0);
+		Set<String> unique = new HashSet<String>(ans);
+		for(int i = 0; i < ans.size(); i++) {
+			if(unique.contains(ans.get(i))) unique.remove(ans.get(i));
+			else {
+				ans.remove(i);
+				i--;
+			}
+		}
+		
 		Collections.sort(ans);
+		return ans;
+	}
+	
+	private List<String> expQuery(String exp, int index) {
+		List<String> ans = new ArrayList<String>();
+		if(index >= exp.length()) {
+			if(EOW) ans.add("");
+			return ans;
+		}
+		List<String> aux;
+		switch(exp.charAt(index)) {
+			case '.':
+				for(char c: map.keySet()) {
+					aux = map.get(c).expQuery(exp, index + 1);
+					for(int i = 0; i < aux.size(); i++) aux.set(i, c + aux.get(i));
+					ans.addAll(aux);
+				}
+				break;
+			case '*':
+				ans.addAll(this.expQuery(exp, index + 1));
+				for(char c: map.keySet()) {
+					aux = map.get(c).expQuery(exp, index);
+					for(int i = 0; i < aux.size(); i++) aux.set(i, c + aux.get(i));
+					ans.addAll(aux);
+				}
+				break;
+			default:
+				if(map.containsKey(exp.charAt(index))) {
+					aux = map.get(exp.charAt(index)).expQuery(exp, index + 1);
+					for(int i = 0; i < aux.size(); i++) aux.set(i, exp.charAt(index) + aux.get(i));
+					ans.addAll(aux);
+				}
+		}
 		return ans;
 	}
 }
