@@ -65,7 +65,7 @@ public class TrieNode {
 	
 	// Probably very bad optimization since we have to prune duplicates at the end...
 	// 		...but with Sets instead of Lists, it somehow takes us more time. Also, 
-	// 		it starts being problematic with lists of items such as {"a", "aa", "aaa"}
+	// 		it might start being problematic with lists of items such as {"a", "aa", "aaa"}
 	public List<String> expQuery(String exp) {
 		List<String> ans = expQuery(exp, 0);
 		Set<String> unique = new HashSet<String>(ans);
