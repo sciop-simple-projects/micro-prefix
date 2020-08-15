@@ -64,8 +64,9 @@ public class TrieNode {
 	//  '*' -> any character any times (incl. 0)
 	
 	// Probably very bad optimization since we have to prune duplicates at the end...
-	// 		...but with Sets instead of Lists, it somehow takes us more time. Also, 
-	// 		it might start being problematic with lists of items such as {"a", "aa", "aaa"}
+	// 		...but with Sets instead of Lists, it somehow takes us more time.
+	//		(not true) -> Also, it might start being problematic with lists of 
+	//			        items such as {"a", "aa", "aaa"}
 	public List<String> expQuery(String exp) {
 		List<String> ans = expQuery(exp, 0);
 		Set<String> unique = new HashSet<String>(ans);
@@ -97,6 +98,13 @@ public class TrieNode {
 					ans.addAll(aux);
 				}
 				break;
+			case '\\':
+				if(map.containsKey(exp.charAt(index + 1))) {
+					aux = map.get(exp.charAt(index + 1)).expQuery(exp, index + 2);
+					for(int i = 0; i < aux.size(); i++) aux.set(i, exp.charAt(index + 1) + aux.get(i));
+					ans.addAll(aux);
+				}
+				break;
 			default:
 				if(map.containsKey(exp.charAt(index))) {
 					aux = map.get(exp.charAt(index)).expQuery(exp, index + 1);
@@ -106,4 +114,43 @@ public class TrieNode {
 		}
 		return ans;
 	}
+	/* Version with sets:
+	 
+	 public List<String> expQuery(String exp) {
+		List<String> ans = new ArrayList<String>(expQuery(exp, 0, ""));
+		Collections.sort(ans);
+		return ans;
+	}
+	
+	private Set<String> expQuery(String exp, int index, String back) {
+		Set<String> ans = new HashSet<String>();
+		if(index >= exp.length()) {
+			if(EOW) ans.add(back);
+			return ans;
+		}
+		switch(exp.charAt(index)) {
+			case '.':
+				for(char c: map.keySet()) {
+					ans.addAll(map.get(c).expQuery(exp, index + 1, back + c));
+				}
+				break;
+			case '*':
+				ans.addAll(this.expQuery(exp, index + 1, back));
+				for(char c: map.keySet()) {
+					ans.addAll(map.get(c).expQuery(exp, index, back + c));
+				}
+				break;
+			case '\\':
+				if(map.containsKey(exp.charAt(index + 1))) {
+					ans.addAll(map.get(exp.charAt(index + 1)).expQuery(exp, index + 2, back + exp.charAt(index + 1)));
+				}
+				break;
+			default:
+				if(map.containsKey(exp.charAt(index))) {
+					ans.addAll(map.get(exp.charAt(index)).expQuery(exp, index + 1, back + exp.charAt(index)));
+				}
+		}
+		return ans;
+	}
+	*/
 }
