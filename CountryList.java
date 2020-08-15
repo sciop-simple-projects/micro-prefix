@@ -52,7 +52,7 @@ public class CountryList {
 			  		  + "Tuvalu;Two Sicilies;Uganda;Ukraine;Union of Soviet Socialist Republics;"
 			  		  + "United Arab Emirates, The;United Kingdom, The;Uruguay;Uzbekistan;Vanuatu;"
 			  		  + "Venezuela;Vietnam;Württemberg;Yemen;Zambia;"
-			  		  + "Zimbabwe";
+			  		  + "Zimbabwe;www.wikipedia.org;XÆa*2";
 	
 	public static void main(String[] args) {
 		
@@ -111,13 +111,13 @@ public class CountryList {
 		System.out.println("   . -> one of any character");
 		System.out.println();
 		
-		String q = "*land";
+		String q = "*\\**";
 		System.out.println("Query: \"" + q + "\"");
 		System.out.println();
 		now = LocalTime.now().getNano()/1000;
 		System.out.println(root.expQuery(q));
 		now = LocalTime.now().getNano()/1000 - now;
 		if(now < 0) now += 1000000;
-		System.out.println("This single calculation took " + now/1000 + " ms. This is probably very bad.");
+		System.out.println("This single calculation took " + now + " mms. This is probably very bad.");
 	}
 }
