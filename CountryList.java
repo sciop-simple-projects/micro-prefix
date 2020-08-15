@@ -52,7 +52,7 @@ public class CountryList {
 			  		  + "Tuvalu;Two Sicilies;Uganda;Ukraine;Union of Soviet Socialist Republics;"
 			  		  + "United Arab Emirates, The;United Kingdom, The;Uruguay;Uzbekistan;Vanuatu;"
 			  		  + "Venezuela;Vietnam;Württemberg;Yemen;Zambia;"
-			  		  + "Zimbabwe;www.wikipedia.org;XÆa*2";
+			  		  + "Zimbabwe;www.wikipedia.org;XÆa*2;\\o/";
 	
 	public static void main(String[] args) {
 		
