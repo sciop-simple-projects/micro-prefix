@@ -64,17 +64,12 @@ public class TrieNode {
 	//  '*' -> any character any times (incl. 0)
 	
 	// Probably very bad optimization since we have to prune duplicates at the end...
+	// 		...but with Sets instead of Lists, it somehow takes us more time. Also, 
+	// 		it starts being problematic with lists of items such as {"a", "aa", "aaa"}
 	public List<String> expQuery(String exp) {
 		List<String> ans = expQuery(exp, 0);
 		Set<String> unique = new HashSet<String>(ans);
-		for(int i = 0; i < ans.size(); i++) {
-			if(unique.contains(ans.get(i))) unique.remove(ans.get(i));
-			else {
-				ans.remove(i);
-				i--;
-			}
-		}
-		
+		ans = new ArrayList<String>(unique);
 		Collections.sort(ans);
 		return ans;
 	}
