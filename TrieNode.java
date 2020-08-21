@@ -1,23 +1,27 @@
 package quick;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.HashMap;
 
 public class TrieNode {
-	protected Map<Character, TrieNode> map;
-	protected boolean EOW;
+	private Map<Character, TrieNode> map;
+	private boolean EOW;
 	
 	public TrieNode() {
 		map = new HashMap<Character, TrieNode>();
 		EOW = false;
 	}
 	
-	protected void add(String s, int index) {
+	public void add(String s) {
+		add(s, 0);
+	}
+	
+	private void add(String s, int index) {
 		if(index == s.length()) EOW = true;
 		else {
 			if(!map.containsKey(s.charAt(index))) map.put(s.charAt(index), new TrieNode());
@@ -25,18 +29,14 @@ public class TrieNode {
 		}
 	}
 	
-	public void add(String s) {
-		add(s, 0);
+	public boolean query(String s) {
+		return query(s, 0);
 	}
 	
-	protected boolean query(String s, int index) {
+	private boolean query(String s, int index) {
 		if(index == s.length()) return EOW;
 		if(!map.containsKey(s.charAt(index))) return false;
 		return map.get(s.charAt(index)).query(s, index + 1);
-	}
-	
-	public boolean query(String s) {
-		return query(s, 0);
 	}
 	
 	// Returns a (sorted) list of all strings below the node that start with pre
@@ -46,7 +46,7 @@ public class TrieNode {
 		return ans;
 	}
 	
-	protected List<String> prefixQuery(String pre, int index) {
+	private List<String> prefixQuery(String pre, int index) {
 		List<String> ans = new ArrayList<String>();
 		if(index < pre.length()) {
 			if(!map.containsKey(pre.charAt(index))) return ans;
@@ -61,12 +61,10 @@ public class TrieNode {
 	
 	// Returns a (sorted) list of all strings below the node that match exp:
 	//	'.' -> any character
-	//  '*' -> any character any times (incl. 0)
+	//	'*' -> any character any times (incl. 0)
 	
 	// Probably very bad optimization since we have to prune duplicates at the end...
 	// 		...but with Sets instead of Lists, it somehow takes us more time.
-	//		(not true) -> Also, it might start being problematic with lists of 
-	//			        items such as {"a", "aa", "aaa"}
 	public List<String> expQuery(String exp) {
 		List<String> ans = expQuery(exp, 0);
 		Set<String> unique = new HashSet<String>(ans);
@@ -114,8 +112,8 @@ public class TrieNode {
 		}
 		return ans;
 	}
+	
 	/* Version with sets:
-	 
 	 public List<String> expQuery(String exp) {
 		List<String> ans = new ArrayList<String>(expQuery(exp, 0, ""));
 		Collections.sort(ans);
