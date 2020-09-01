@@ -1,8 +1,10 @@
-package quick;
+package show;
 
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Random;
+
+import prefix.PrefixTrieNode;
 
 public class CountryList {
 	
@@ -57,7 +59,7 @@ public class CountryList {
 	public static void main(String[] args) {
 		
 		// Creating the trie
-		TrieNode root = new TrieNode();
+		PrefixTrieNode root = new PrefixTrieNode();
 		String[] c = raw.split(";");
 		for(int i = 0; i < c.length; i++) {
 			root.add(c[i]);
